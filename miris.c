@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     // if (argc != 3){
     //     printf("Two args required");
     //     exit(-1);
-    // }
+    // }//
 
     int option;
     while((option = getopt(argc , argv, ":i:o")) != -1){

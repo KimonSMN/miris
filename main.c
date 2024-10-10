@@ -23,6 +23,7 @@ int main(int argc, char *argv[]){
         case '?':
             printf("ERROR");
             exit(-1);
+            
         }
     }
 
