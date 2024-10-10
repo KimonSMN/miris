@@ -5,6 +5,8 @@
     "stdio.h": "c",
     "graph.h": "c",
     "unistd.h": "c",
-    "getopt_core.h": "c"
+    "getopt_core.h": "c",
+    "random": "c",
+    "string.h": "c"
   }
 }

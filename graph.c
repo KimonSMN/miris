@@ -2,10 +2,12 @@
 #include "graph.h"
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct node {
     int accountName;
-    int weight;
+    int amount;
+    char *date;
     Node next;
 };
 
@@ -41,7 +43,7 @@ Graph create_graph(int numNodes){
 }
 
 void destroy_graph(Graph graph){
-    if(graph->numNodes == NULL){
+    if(graph->numNodes == -1){ // == -1 and not NULL  
         return;
     }
 
@@ -57,17 +59,18 @@ void destroy_graph(Graph graph){
     free(graph);
 }
 
-Node create_node(int accountName, int weight){
+Node create_node(int accountName, int amount, char *date){
     Node new_node = malloc(sizeof(new_node));
     new_node->accountName = accountName;
-    new_node->weight = weight;
+    new_node->amount = amount;
     new_node->next = NULL;
+    new_node->date = strdup(date);
     return new_node;
 }
 
 
-void add_edge(Graph graph, int from_node, int to_node, int weight){
-    Node new_node = create_node(to_node, weight);
+void add_edge(Graph graph, int from_node, int to_node, int amount, char *date){
+    Node new_node = create_node(to_node, amount, date);
     new_node->next = graph->adj_list[from_node];
     graph->adj_list[from_node] = new_node;
 }
@@ -78,7 +81,7 @@ void print_graph(Graph graph){
         if(current_node == NULL) continue;
         printf("Adjacency list of vertex %d: ", i);
         while(current_node != NULL){
-            printf("(%d, %d) -> ", current_node->accountName, current_node->weight);
+            printf("(%d, %d, %s) -> ", current_node->accountName, current_node->amount, current_node->date);
             current_node = current_node->next;
         }
         printf("NULL\n");
