@@ -1,13 +1,13 @@
 CC = gcc
-CFLAGS = -Wall -g
+CFLAGS = -Wall -g #-Werror 
 DEPS = graph.h
-OBJ = graph.o main.o
+OBJ = graph.o miris.o
 
 # Default target
-all: main
+all: miris
 
 # Compile the graph program
-main: $(OBJ)
+miris: $(OBJ)
 	$(CC) -o $@ $(OBJ)
 
 # Compile .o files for each .c file
@@ -16,6 +16,6 @@ main: $(OBJ)
 
 # Clean up generated files
 clean:
-	rm -f *.o main
+	rm -f *.o miris
 
 .PHONY: clean
