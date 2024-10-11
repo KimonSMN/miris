@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
 
-    Graph graph = create_graph(12);
+    Graph graph = create_graph(12); // have to change it to me dynamic
 
     int option;
     while((option = getopt(argc , argv, ":i:o")) != -1){

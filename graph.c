@@ -1,19 +1,13 @@
-#include <stdio.h>
 #include "graph.h"
-#include <stdbool.h>
+#include "hashtable.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-struct node {
-    int accountName;
-    int amount;
-    char *date;
-    Node next;
-};
 
 struct graph{
     int numNodes;
     Node *adj_list;
+    Hashtable accounts_table;
 };
 
 
@@ -24,7 +18,6 @@ Graph create_graph(int numNodes){
     }
 
     graph->numNodes = numNodes;
-
 
     // Allocate memory for the adjacency list (array of Node pointers)
 
@@ -38,8 +31,14 @@ Graph create_graph(int numNodes){
     for (int i = 0; i < numNodes; i++){
         graph->adj_list[i] = NULL;
     }
-    return graph;
 
+    // graph->accounts_table = create_hashtable(100);
+    // if (graph->accounts_table == NULL){
+    //     free(graph);
+    //     return NULL;
+    // }
+
+    return graph;
 }
 
 void destroy_graph(Graph graph){
@@ -73,6 +72,8 @@ void add_edge(Graph graph, int from_node, int to_node, int amount, char *date){
     Node new_node = create_node(to_node, amount, date);
     new_node->next = graph->adj_list[from_node];
     graph->adj_list[from_node] = new_node;
+
+    // insert_hashtable(graph->accounts_table, new_node);
 }
 
 void print_graph(Graph graph){
@@ -88,7 +89,3 @@ void print_graph(Graph graph){
     }
 }
 
-
-// bool remove_edge(Graph graph, int from_node, int to_node){
-
-// }

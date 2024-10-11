@@ -7,6 +7,11 @@
     "unistd.h": "c",
     "getopt_core.h": "c",
     "random": "c",
-    "string.h": "c"
+    "string.h": "c",
+    "hashtable.h": "c",
+    "array": "c",
+    "string_view": "c",
+    "initializer_list": "c",
+    "*.tcc": "c"
   }
 }

@@ -1,9 +1,16 @@
+#ifndef GRAPH_H
 #define GRAPH_H
-#include <stdbool.h>
 
 typedef struct graph *Graph;
 
 typedef struct node *Node;
+
+struct node {
+    int accountName;
+    int amount;
+    char *date;
+    Node next;
+};
 
 Graph create_graph(int numNodes);
 
@@ -15,5 +22,4 @@ void add_edge(Graph graph, int from_node, int to_node, int weight, char *date);
 
 void print_graph(Graph graph);
 
-
-// bool remove_edge(Graph graph, int from_node, int to_node);
+#endif

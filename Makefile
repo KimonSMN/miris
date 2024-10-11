@@ -1,12 +1,19 @@
+# Compiler
 CC = gcc
-CFLAGS = -Wall -g #-Werror 
-DEPS = graph.h
-OBJ = graph.o miris.o
 
-# Default target
+# Compiler flags
+CFLAGS = -Wall -g 
+
+# Dependencies (header files)
+DEPS = graph.h hashtable.h
+
+# Object files
+OBJ = graph.o miris.o hashtable.o
+
+# Default target: Build the executable
 all: miris
 
-# Compile the graph program
+# Link the object files to create the final executable
 miris: $(OBJ)
 	$(CC) -o $@ $(OBJ)
 
@@ -14,7 +21,7 @@ miris: $(OBJ)
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-# Clean up generated files
+# Clean up object files and executable
 clean:
 	rm -f *.o miris
 
