@@ -1,20 +1,33 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 
-#include "graph.h"
+#include <stdbool.h>
 
-typedef struct hashtable *Hashtable;
+typedef struct hash_table *HashTable;
+typedef struct hash_node *HashNode;
 
-Hashtable create_hashtable(int size); // Function to create a hashtable
+struct hash_node {
+    char *key;
+    int value;
+    HashNode next; // separate chaining
+};
 
-void destroy_hashtable(Hashtable table); // Function to free hashtable
+struct hash_table {
+    HashNode *array;
+    int size;
+};
 
-void insert_hashtable(Hashtable table, Node new_node);
+// Function declarations
+HashTable create_hash_table(int size);
 
-Hashtable search_hashtable(Hashtable table, Node new_node);
+void destroy_hash_table(HashTable htable);
 
-int hash(int accountName, int size); // hash function
+bool insert_hash_table(HashTable htable, char *key, int value);
 
-void destroy_hashtable(Hashtable table);
+void print_hash_table(HashTable htable);
 
-#endif 
+HashNode search_hash_table(HashTable htable, char *key);
+
+unsigned long hash(char *str);
+
+#endif

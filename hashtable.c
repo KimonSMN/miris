@@ -1,60 +1,76 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "hashtable.h"
 
-#define TABLE_SIZE 100
-
-struct hashtable{
-    Node *table; // a table with accounts 
-    int size;
-};
-
-Hashtable create_hashtable(int size){
-
-    // Allocate memory for the hashtable structure
-    Hashtable accounts_table = malloc(sizeof(struct hashtable)); 
-
-    // Allocate memory for the node table (accounts table)
-    accounts_table->table = malloc(size * sizeof(Node));
-
-    // set every element of the table to null 
-    for (int i = 0; i < size; i++){
-        accounts_table->table[i] == NULL;
+unsigned long hash(char *str) {
+    unsigned long hash = 5381;
+    int c;
+    while ((c = *str++)) {
+        hash = ((hash << 5) + hash) + c; // hash * 33 + c
     }
-
-    accounts_table->size = size;
-
-    return accounts_table;
+    return hash;
 }
 
-void print_hashtable(Hashtable table) {
-    if (table = NULL) {
-        printf("Hashtable is NULL.\n");
-        return;
+HashTable create_hash_table(int size){
+    HashTable htable = malloc(sizeof(struct hash_table));
+    htable->size = size;
+    htable->array = calloc(htable->size, sizeof(struct hash_node*));
+    return htable;
+}
+
+void destroy_hash_table(HashTable htable){
+    for (int i = 0; i < htable->size; i++) {
+        HashNode current = htable->array[i];
+        while (current != NULL) {
+            HashNode temp = current;
+            current = current->next;
+            free(temp->key);
+            free(temp);
+        }
     }
+    free(htable->array);
+    free(htable);
+}
 
-    printf("Hashtable contents:\n");
+bool insert_hash_table(HashTable htable, char *key, int value){
+    unsigned long i = hash(key) % htable->size;
 
-    // Iterate through each index of the hash table
-    for (int i = 0; i < table->size; i++) {
-        printf("Index %d: ", i);
+    HashNode new_hash_node = malloc(sizeof(struct hash_node));
+    new_hash_node->key = strdup(key);
+    new_hash_node->value = value;
+    new_hash_node->next = htable->array[i];
+    htable->array[i] = new_hash_node;
 
-        Node curr = table->table[i];
-        while (curr != NULL){
-            printf("(%d, %d, %s) -> ", curr->accountName, curr->amount, curr->date);
-            curr = curr->next;
+    return true;
+}
+
+void print_hash_table(HashTable htable) {
+    printf("Hash Table Contents:\n");
+    for (int i = 0; i < htable->size; i++) {
+        HashNode current = htable->array[i];
+        if (current == NULL) {
+            printf("Bucket %d: Empty\n", i);
+        } else {
+            printf("Bucket %d: ", i);
+            while (current != NULL) {
+                printf("[AccountName: %s, Amount: %d] -> ", current->key, current->value);
+                current = current->next;
+            }
+            printf("NULL\n");
         }
     }
 }
 
-int hash(int accountName, int size) {
-    return accountName % size;  // Simple modulo-based hash function
+HashNode search_hash_table(HashTable htable, char *key){
+    unsigned long i = hash(key) % htable->size;
+
+    HashNode current = htable->array[i];
+    while (current != NULL) {
+        if (strcmp(current->key, key) == 0) {
+            return current;
+        }
+        current = current->next;
+    }
+    return NULL;
 }
-
-void insert_hashtable(Hashtable table, Node new_node){
-    int index = hash(new_node->accountName, table->size);
-    new_node->next = table->table[index];
-    table->table[index] = new_node;
-}
-
-

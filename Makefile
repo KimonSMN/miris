@@ -15,11 +15,11 @@ all: miris
 
 # Link the object files to create the final executable
 miris: $(OBJ)
-	$(CC) -o $@ $(OBJ)
+	$(CC) $(OBJ) -o $@
 
 # Compile .o files for each .c file
 %.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 # Clean up object files and executable
 clean:
