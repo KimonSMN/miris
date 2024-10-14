@@ -1,33 +1,52 @@
+// graph.h
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include "hashtable.h"
+#include <stdbool.h>
+
+typedef struct graph *Graph;
 
 typedef struct node *Node;
-typedef struct graph *Graph;
+
+typedef struct edge *Edge;
+
+struct graph {
+    Node nodes; // Linked list of nodes
+};
 
 struct node {
     char *accountName;
-    int amount;
-    char *date;
+    Edge edges;
     Node next;
 };
 
-struct graph {
-    int numNodes;
-    Node *adj_list;
-    HashTable accounts_table;
+struct edge {
+    Node to_node;
+    int amount;
+    char *date;
+    Edge next;
 };
 
-// Function declarations
-Graph create_graph(int numNodes);
+// function to create a new graph
+Graph create_graph();
 
+//function to destroy the graph and free up the memory
 void destroy_graph(Graph graph);
 
-Node create_node(char *accountName, int amount, char *date);
+// function to create a new node
+Node create_node(char *accountName);
 
+// function to find a node
+Node find_node(Graph graph, char *accountName);
+// function to add a node to the graph
+void add_node(Graph graph, char *accountName);
+
+// function to add an edge to the graph
 void add_edge(Graph graph, char *from_account, char *to_account, int amount, char *date);
 
+// function to print the graph
 void print_graph(Graph graph);
 
-#endif
+#endif // GRAPH_H
+
+

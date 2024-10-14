@@ -3,75 +3,107 @@
 #include <string.h>
 #include "graph.h"
 
-Graph create_graph(int numNodes){
-    Graph graph = malloc(sizeof(struct graph)); 
-    if (graph == NULL){
+Graph create_graph() {
+    Graph graph = malloc(sizeof(struct graph));
+    if (graph == NULL) {
         return NULL;
     }
-
-    graph->numNodes = numNodes;
-    graph->adj_list = calloc(numNodes, sizeof(Node));
-    if (graph->adj_list == NULL){
-        free(graph);
-        return NULL;
-    }
-
-    graph->accounts_table = create_hash_table(100);
-    if (graph->accounts_table == NULL){
-        free(graph->adj_list);
-        free(graph);
-        return NULL;
-    }
-
+    graph->nodes = NULL;
     return graph;
 }
 
-void destroy_graph(Graph graph){
-    if(graph == NULL){  
+void destroy_graph(Graph graph) {
+    if (graph == NULL) {
         return;
     }
+    Node current_node = graph->nodes;
+    while (current_node != NULL) {
+        Node temp_node = current_node;
+        current_node = current_node->next;
 
-    for(int i = 0; i < graph->numNodes; i++){
-        Node current_node = graph->adj_list[i];
-        while (current_node != NULL){
-            Node temp = current_node;
-            current_node = current_node->next;
-            free(temp->date);
-            free(temp);
+        Edge current_edge = temp_node->edges;
+        while (current_edge != NULL) {
+            Edge temp_edge = current_edge;
+            current_edge = current_edge->next;
+            free(temp_edge->date);
+            free(temp_edge);
         }
+
+        free(temp_node->accountName);
+        free(temp_node);
     }
-    free(graph->adj_list);
-    destroy_hash_table(graph->accounts_table);
     free(graph);
 }
 
-Node create_node(char *accountName, int amount, char *date){
+Node create_node(char *accountName) {
     Node new_node = malloc(sizeof(struct node));
+    if (new_node == NULL) {
+        return NULL;
+    }
     new_node->accountName = strdup(accountName);
-    new_node->amount = amount;
+    new_node->edges = NULL;
     new_node->next = NULL;
-    new_node->date = strdup(date);
     return new_node;
 }
 
-void add_edge(Graph graph, char *from_account, char *to_account, int amount, char *date){
-    Node new_node = create_node(to_account, amount, date);
-    unsigned long from_index = hash(from_account) % graph->numNodes;
-    new_node->next = graph->adj_list[from_index];
-    graph->adj_list[from_index] = new_node;
-
-    insert_hash_table(graph->accounts_table, to_account, amount);
+Node find_node(Graph graph, char *accountName) {
+    Node current_node = graph->nodes;
+    while (current_node != NULL) {
+        if (strcmp(current_node->accountName, accountName) == 0) {
+            return current_node;
+        }
+        current_node = current_node->next;
+    }
+    return NULL;
 }
 
-void print_graph(Graph graph){
-    for(int i = 0; i < graph->numNodes; i++){
-        Node current_node = graph->adj_list[i];
-        if(current_node == NULL) continue;
-        printf("Adjacency list of vertex %d: ", i);
-        while(current_node != NULL){
-            printf("(%s, %d, %s) -> ", current_node->accountName, current_node->amount, current_node->date);
-            current_node = current_node->next;
+void add_node(Graph graph, char *accountName) {
+    if (find_node(graph, accountName) != NULL) {
+        return;
+    }
+    Node new_node = create_node(accountName);
+    new_node->next = graph->nodes;
+    graph->nodes = new_node;
+}
+
+void add_edge(Graph graph, char *from_account, char *to_account, int amount, char *date) {
+    Node from_node = find_node(graph, from_account);
+    if (from_node == NULL) {
+        // maybe can use add_node instead but i have to change function from void type
+        from_node = create_node(from_account);
+        from_node->next = graph->nodes;
+        graph->nodes = from_node;
+    }
+    Node to_node = find_node(graph, to_account);
+    if (to_node == NULL) {
+        to_node = create_node(to_account);
+        to_node->next = graph->nodes;
+        graph->nodes = to_node;
+    }
+
+    Edge new_edge = malloc(sizeof(struct edge));
+    if (new_edge == NULL) {
+        return;
+    }
+    new_edge->to_node = to_node;
+    new_edge->amount = amount;
+    new_edge->date = strdup(date);
+    new_edge->next = from_node->edges;
+    from_node->edges = new_edge;
+}
+
+void print_graph(Graph graph) {
+    Node current_node = graph->nodes;
+    while (current_node != NULL) {
+        printf("\nAccount %s:", current_node->accountName);
+        Edge current_edge = current_node->edges;
+        while (current_edge != NULL) {
+            printf("  -> %s (Amount: %d, Date: %s)",
+                   current_edge->to_node->accountName,
+                   current_edge->amount,
+                   current_edge->date);
+            current_edge = current_edge->next;
         }
-        printf("NULL\n");
+        current_node = current_node->next;
     }
 }

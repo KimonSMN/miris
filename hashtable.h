@@ -8,7 +8,7 @@ typedef struct hash_node *HashNode;
 
 struct hash_node {
     char *key;
-    int value;
+    void *value;
     HashNode next; // separate chaining
 };
 
@@ -20,14 +20,14 @@ struct hash_table {
 // Function declarations
 HashTable create_hash_table(int size);
 
-void destroy_hash_table(HashTable htable);
-
-bool insert_hash_table(HashTable htable, char *key, int value);
+bool insert_hash_table(HashTable htable, char *key, void *value);
 
 void print_hash_table(HashTable htable);
 
-HashNode search_hash_table(HashTable htable, char *key);
+void destroy_hash_table(HashTable htable);
 
 unsigned long hash(char *str);
 
+
+// add search function
 #endif

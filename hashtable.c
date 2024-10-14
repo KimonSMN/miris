@@ -4,14 +4,14 @@
 #include "hashtable.h"
 
 unsigned long hash(char *str) {
-    unsigned long hash = 5381;
-    int c;
-    while ((c = *str++)) {
-        hash = ((hash << 5) + hash) + c; // hash * 33 + c
-    }
-    return hash;
-}
 
+        unsigned long hash = 5381;
+        int c;
+        while ((c = *str++))
+            hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+        return hash % 100; // 100 == num buckets, change it afterwards
+
+}
 HashTable create_hash_table(int size){
     HashTable htable = malloc(sizeof(struct hash_table));
     htable->size = size;
@@ -19,13 +19,14 @@ HashTable create_hash_table(int size){
     return htable;
 }
 
-void destroy_hash_table(HashTable htable){
+void destroy_hash_table(HashTable htable) {
     for (int i = 0; i < htable->size; i++) {
         HashNode current = htable->array[i];
         while (current != NULL) {
             HashNode temp = current;
             current = current->next;
             free(temp->key);
+            free(temp->value); // Free the value if necessary
             free(temp);
         }
     }
@@ -33,9 +34,20 @@ void destroy_hash_table(HashTable htable){
     free(htable);
 }
 
-bool insert_hash_table(HashTable htable, char *key, int value){
+
+bool insert_hash_table(HashTable htable, char *key, void *value) {
     unsigned long i = hash(key) % htable->size;
 
+    HashNode current = htable->array[i];
+    while (current != NULL) {
+        if (strcmp(current->key, key) == 0) {
+            current->value = value; // Update the value
+            return true;
+        }
+        current = current->next;
+    }
+
+    // If not found, insert new node
     HashNode new_hash_node = malloc(sizeof(struct hash_node));
     new_hash_node->key = strdup(key);
     new_hash_node->value = value;
@@ -44,6 +56,7 @@ bool insert_hash_table(HashTable htable, char *key, int value){
 
     return true;
 }
+
 
 void print_hash_table(HashTable htable) {
     printf("Hash Table Contents:\n");
@@ -54,7 +67,9 @@ void print_hash_table(HashTable htable) {
         } else {
             printf("Bucket %d: ", i);
             while (current != NULL) {
-                printf("[AccountName: %s, Amount: %d] -> ", current->key, current->value);
+                // For accounts_table, value is an int*
+                int *amount_ptr = (int *)current->value;
+                printf("[AccountName: %s, Amount: %d] -> ", current->key, *amount_ptr);
                 current = current->next;
             }
             printf("NULL\n");
@@ -62,15 +77,4 @@ void print_hash_table(HashTable htable) {
     }
 }
 
-HashNode search_hash_table(HashTable htable, char *key){
-    unsigned long i = hash(key) % htable->size;
 
-    HashNode current = htable->array[i];
-    while (current != NULL) {
-        if (strcmp(current->key, key) == 0) {
-            return current;
-        }
-        current = current->next;
-    }
-    return NULL;
-}
