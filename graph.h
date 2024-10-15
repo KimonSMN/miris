@@ -6,39 +6,52 @@
 
 typedef struct graph *Graph;
 
-typedef struct node *Node;
-
-typedef struct edge *Edge;
-
 struct graph {
-    Node nodes; // Linked list of nodes
+    struct node *nodes; // Linked list of nodes
+    struct hash_table *htable;
 };
 
 struct node {
     char *accountName;
-    Edge edges;
-    Node next;
+    struct edge *edges;
+    struct node *next;
 };
 
 struct edge {
-    Node to_node;
+    struct node *to_node;
     int amount;
     char *date;
-    Edge next;
+    struct edge *next;
 };
 
-// function to create a new graph
+struct hash_node {
+    char *key;
+    struct edge *value; // pointer to the list of edges (transactions) for the key (accountName)
+    struct hash_node *next; // to handle collisions with chaining
+
+};
+struct hash_table {
+    struct hash_node **array; // array of pointers to hash_nodes
+    int capacity;
+};
+
+//// Graph functions ////////////////
+
+// Δημιουργει εναν γραφο graph.
 Graph create_graph();
 
-//function to destroy the graph and free up the memory
+// Ελευθερώνει όλη τη μνήμη που δεσμεύει ο graph.
 void destroy_graph(Graph graph);
 
-// function to create a new node
-Node create_node(char *accountName);
+// Δημιουργει ενα καινουριο κομβο node με ονομα accountName.
+// Επιστρεφει αυτον τον κομβο.
+struct node *create_node(char *accountName);
 
-// function to find a node
-Node find_node(Graph graph, char *accountName);
-// function to add a node to the graph
+// Βρισκει και επιστρεφει τον κομβο node με ονομα == accountName.
+// Αν δεν βρεθει επιστρεφει NULL.
+struct node *find_node(Graph graph, char *accountName);
+
+// Προσθετει στον γραφο, τον κομβο με ονομα accountName.
 void add_node(Graph graph, char *accountName);
 
 // function to add an edge to the graph
@@ -46,6 +59,21 @@ void add_edge(Graph graph, char *from_account, char *to_account, int amount, cha
 
 // function to print the graph
 void print_graph(Graph graph);
+
+//// Hash functions ////////////////
+
+// Δημιουργει ενα hashtable με μεγεθος capacity
+struct hash_table *create_hash_table(int capacity);
+
+bool insert_hash_table(struct hash_table *htable, char *key, struct edge *transaction);
+
+void search_hash_table(struct hash_table *htable, char *key);
+
+void print_hash_table(struct hash_table *htable);
+
+void destroy_hash_table(struct hash_table *htable);
+
+unsigned long hash(char *str);
 
 #endif // GRAPH_H
 

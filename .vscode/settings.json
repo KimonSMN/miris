@@ -19,6 +19,7 @@
     "tuple": "c",
     "type_traits": "c",
     "utility": "c",
-    "string": "c"
+    "string": "c",
+    "vector": "c"
   }
 }

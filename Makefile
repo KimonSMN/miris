@@ -5,10 +5,10 @@ CC = gcc
 CFLAGS = -Wall -g 
 
 # Dependencies (header files)
-DEPS = graph.h hashtable.h
+DEPS = graph.h
 
 # Object files
-OBJ = graph.o miris.o hashtable.o
+OBJ = graph.o miris.o
 
 # Default target: Build the executable
 all: miris

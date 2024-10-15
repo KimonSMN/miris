@@ -39,5 +39,7 @@ int main(int argc, char *argv[])
     
     print_graph(graph);
 
+    print_hash_table(graph->htable);
+
     destroy_graph(graph);
 }
