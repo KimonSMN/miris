@@ -38,7 +38,7 @@ struct hash_table {
 //// Graph functions ////////////////
 
 // Δημιουργει εναν γραφο graph.
-Graph create_graph();
+Graph create_graph(int size);
 
 // Ελευθερώνει όλη τη μνήμη που δεσμεύει ο graph.
 void destroy_graph(Graph graph);

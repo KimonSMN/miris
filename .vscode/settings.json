@@ -20,6 +20,7 @@
     "type_traits": "c",
     "utility": "c",
     "string": "c",
-    "vector": "c"
+    "vector": "c",
+    "algorithm": "c"
   }
 }

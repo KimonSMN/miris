@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "graph.h"
 
-Graph create_graph() {
+Graph create_graph(int size) {
     
     // Δεσμευση μνημης για τον γραφο 
     Graph graph = malloc(sizeof(struct graph));
@@ -12,7 +12,7 @@ Graph create_graph() {
         return NULL;        // Κατι πηγε στραβα επεστρεψε NULL.
     }
     graph->nodes = NULL;
-    graph->htable = create_hash_table(100);
+    graph->htable = create_hash_table(size);
     return graph;
 }
 
