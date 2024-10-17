@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
 
-    Graph graph = create_graph(12);
+    Graph graph = create_graph();
 
     int option;
     while((option = getopt(argc , argv, ":i:o")) != -1){
@@ -36,10 +36,16 @@ int main(int argc, char *argv[])
         }
     }
 
-    
     print_graph(graph);
 
     print_hash_table(graph->htable);
+
+    struct hash_node *node = search_hash_table(graph->htable, "8");
+    if (node != NULL) {
+        printf("Found: %s\n", node->key);
+    } else {
+        printf("Not Found\n");
+    }
 
     destroy_graph(graph);
 }

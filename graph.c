@@ -123,12 +123,12 @@ void print_graph(Graph graph) {
 }
 
 // Hash function
-unsigned long hash(char *str) {
+unsigned long hash(struct hash_table *htable, char *str) {
     unsigned long hash = 5381;
     int c;
     while ((c = *str++))
         hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-    return hash;
+    return hash % htable->capacity;
 }
 
 struct hash_table *create_hash_table(int capacity) {
@@ -146,7 +146,7 @@ bool insert_hash_table(struct hash_table *htable, char *key, struct edge *transa
         return false;
     }
 
-    unsigned long index = hash(key) % htable->capacity;
+    unsigned long index = hash(htable, key);
 
     struct hash_node *node = htable->array[index];
     while (node != NULL) {
@@ -176,6 +176,19 @@ void print_transactions(struct edge *transaction) {
                transaction->to_node->accountName, transaction->amount, transaction->date);
         transaction = transaction->next;
     }
+}
+
+struct hash_node *search_hash_table(struct hash_table *htable, char *key){
+    unsigned long index = hash(htable, key);
+
+    struct hash_node *node_to_search = htable->array[index];
+    while (node_to_search != NULL){
+        if(strcmp(node_to_search->key, key) == 0){
+            return node_to_search;
+        }
+        node_to_search = node_to_search->next;
+    }
+    return NULL;
 }
 
 void print_hash_table(struct hash_table *htable) {

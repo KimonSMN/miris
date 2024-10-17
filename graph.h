@@ -67,13 +67,13 @@ struct hash_table *create_hash_table(int capacity);
 
 bool insert_hash_table(struct hash_table *htable, char *key, struct edge *transaction);
 
-void search_hash_table(struct hash_table *htable, char *key);
+struct hash_node *search_hash_table(struct hash_table *htable, char *key);
 
 void print_hash_table(struct hash_table *htable);
 
 void destroy_hash_table(struct hash_table *htable);
 
-unsigned long hash(char *str);
+unsigned long hash(struct hash_table *htable, char *str);
 
 #endif // GRAPH_H
 
