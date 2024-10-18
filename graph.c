@@ -26,19 +26,17 @@ void destroy_graph(Graph graph) {
         current_node = current_node->next;      
 
         struct edge *current_edge = temp_node->edges; 
-        while (current_edge != NULL) {
-            struct edge *temp_edge = current_edge;
-            current_edge = current_edge->next;
-            free(temp_edge->date);
-            free(temp_edge);
+        while (current_edge != NULL) {              // Για οσο υπαρχουν συναλλαγες.
+            struct edge *temp_edge = current_edge;  // Δημιουργει ενα temporary edge ισο με το current_edge.
+            current_edge = current_edge->next;      // Το current_edge γινετε το επομενο του (για να συνεχισει το iteration).
+            free(temp_edge->date);          // Ελευθερωση της ημερομηνιας που ειναι δεσμευμενη δυναμικα. 
+            free(temp_edge);                // Ελευθερωση του edge (συναλλαγη).
         }
 
-        free(temp_node->accountName);
-        free(temp_node);
+        free(temp_node->accountName);       // Ελευθερωση του accountName που ειναι δεσμευμενο δυναμικα.
+        free(temp_node);                    // Ελευθερωση του κομβου.
     }
-    free(graph->htable->array);
-    free(graph->htable);
-    free(graph);
+    free(graph);        // Ελευθερωση του γραφου.
 }
 
 struct node *create_node(char *accountName) {
@@ -170,13 +168,6 @@ bool insert_hash_table(struct hash_table *htable, char *key, struct edge *transa
     return true;
 }
 
-void print_transactions(struct edge *transaction) {
-    while (transaction != NULL) {
-        printf("  -> To account: %s, Amount: %d, Date: %s\n",
-               transaction->to_node->accountName, transaction->amount, transaction->date);
-        transaction = transaction->next;
-    }
-}
 
 struct hash_node *search_hash_table(struct hash_table *htable, char *key){
     unsigned long index = hash(htable, key);
@@ -192,15 +183,18 @@ struct hash_node *search_hash_table(struct hash_table *htable, char *key){
 }
 
 void print_hash_table(struct hash_table *htable) {
-    for (int i = 0; i < htable->capacity; i++) {
-        struct hash_node *node = htable->array[i];
-        if (node == NULL) {
+    for (int i = 0; i < htable->capacity; i++) {    // Απο την αρχη του ht εως το μεγεθος του. 
+        struct hash_node *node = htable->array[i];  
+        if (node == NULL) {         // Εαν το node ειναι κενο (NULL), επεστρεψε.
             continue;
         }
         printf("Bucket %d:\n", i);
-        while (node != NULL) {
+        while (node != NULL) {      // Για οσο το node δεν ειναι κενο. 
             printf("Account: %s\n", node->key);
-            print_transactions(node->value);
+            while (node->value != NULL) {
+                printf("  -> To account: %s, Amount: %d, Date: %s\n", node->value->to_node->accountName, node->value->amount, node->value->date);
+                node->value = node->value->next;
+            }
             node = node->next;
         }
     }
@@ -208,31 +202,23 @@ void print_hash_table(struct hash_table *htable) {
 
 
 void destroy_hash_table(struct hash_table *htable){
-    if(htable == NULL){
-        return;
+    if(htable == NULL){ // Αμα το hash-table ειναι NULL (κενο)
+        return;         // επεστρεψε.
     }
     
-    for (int i = 0; i < htable->capacity; i++) {
+    for (int i = 0; i < htable->capacity; i++) {    // Απο την αρχη του hash-table εως το μεγεθος του.
     struct hash_node *current_node = htable->array[i];
 
-        while (current_node != NULL) {
-            struct hash_node *temp_node = current_node;  
-            current_node = current_node->next; 
+        while (current_node != NULL) {              // Για οσο υπαρχει node στο bucket.
+            struct hash_node *temp_node = current_node; // Δημιουργει εναν temporary node ισο με τον current_node.
+            current_node = current_node->next;      // Ο current_node γινετε ο επομενος του (για να συνεχισει το iteration).
 
-            struct edge *current_edge = temp_node->value;
-            while (current_edge != NULL) {
-                struct edge *temp_edge = current_edge;
-                current_edge = current_edge->next;
-
-                free(temp_edge->date);
-                free(temp_edge);
-            }
-            free(temp_node->key);
-            free(temp_node);
+            free(temp_node->key);           // Ελευθερωση του key (ονομα λογαριασμου) που ειναι δεσμευμενο δυναμικα.
+            free(temp_node);                // Ελευθερωση του κομβου.
         }
     }
-    free(htable->array);
-    free(htable);
+    free(htable->array);        // Ελευθερωση του array του hash-table.
+    free(htable);               // Ελευθρεωση του hash-table.
 }
 
 void insert_edge(Graph graph, char *args){

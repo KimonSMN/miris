@@ -49,27 +49,28 @@ int main(int argc, char *argv[])
         }
     }
 
-    // bool active = true;
-    // char command[64];
+    bool active = true;
+    char command[64];
 
-    // while (active) {
-    //     printf("\n/$ ");
+    while (active) {
+        printf("\n/$ ");
 
-    //     fgets(command, sizeof(command), stdin);
+        fgets(command, sizeof(command), stdin);
         
-    //     command[strlen(command)-1] = '\0';
+        command[strlen(command)-1] = '\0';
 
-    //     if (strncmp(command, "n ", 2) == 0) {
-    //         insert_edge(graph, command + 2);
-    //     }
-    //     else if (strcmp(command, "exit") == 0) {
-    //         active = false;
-    //     }
-    //     else { 
-    //         printf("Command '%s' not found.\n", command);
-    //     }
-    // }
-    // print_graph(graph);
+        if (strncmp(command, "n ", 2) == 0) {
+            insert_edge(graph, command + 2);
+        }
+        else if (strcmp(command, "exit") == 0) {
+            active = false;
+        }
+        else { 
+            printf("Command '%s' not found.\n", command);
+        }
+    }
+    print_graph(graph);
+    
     destroy_hash_table(graph->htable);
     destroy_graph(graph);
     
