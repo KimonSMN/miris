@@ -38,7 +38,7 @@ struct hash_table {
 //// Graph functions ////////////////
 
 // Δημιουργει εναν γραφο graph.
-Graph create_graph(int size);
+Graph create_graph(int capacity);
 
 // Ελευθερώνει όλη τη μνήμη που δεσμεύει ο graph.
 void destroy_graph(Graph graph);
@@ -74,6 +74,11 @@ void print_hash_table(struct hash_table *htable);
 void destroy_hash_table(struct hash_table *htable);
 
 unsigned long hash(struct hash_table *htable, char *str);
+
+//// Command line functions ////////////////
+
+void insert_edge(Graph graph, char *args);
+
 
 #endif // GRAPH_H
 

@@ -4,28 +4,28 @@
 #include <stdbool.h>
 #include "graph.h"
 
-Graph create_graph(int size) {
+Graph create_graph(int capacity) {
     
-    // Δεσμευση μνημης για τον γραφο 
+    // Memory allocation for graph.
     Graph graph = malloc(sizeof(struct graph));
     if (graph == NULL) {
-        return NULL;        // Κατι πηγε στραβα επεστρεψε NULL.
+        return NULL;        // Something went wrong, return NULL.
     }
     graph->nodes = NULL;
-    graph->htable = create_hash_table(size);
+    graph->htable = create_hash_table(capacity);
     return graph;
 }
 
 void destroy_graph(Graph graph) {
     if (graph == NULL) {
-        return;     // Κατι πηγε στραβα επεστρεψε NULL.
+        return;     // Something went wrong, return.
     }
-    struct node *current_node = graph->nodes;   // Ξεκιναμε απο τον 1ο κομβο του γραφου.
-    while (current_node != NULL) {              // Μεχρι να ειναι ο current_node NULL.
-        struct node *temp_node = current_node;  // Προσωρινη αποθηκευση του current_node στον temp
-        current_node = current_node->next;      // ωστε να εχουμε προσβαση στο ->next 
+    struct node *current_node = graph->nodes;   
+    while (current_node != NULL) {              
+        struct node *temp_node = current_node;  
+        current_node = current_node->next;      
 
-        struct edge *current_edge = temp_node->edges; // Ιδια λογικη και εδω.
+        struct edge *current_edge = temp_node->edges; 
         while (current_edge != NULL) {
             struct edge *temp_edge = current_edge;
             current_edge = current_edge->next;
@@ -204,4 +204,44 @@ void print_hash_table(struct hash_table *htable) {
             node = node->next;
         }
     }
+}
+
+
+void destroy_hash_table(struct hash_table *htable){
+    if(htable == NULL){
+        return;
+    }
+    
+    for (int i = 0; i < htable->capacity; i++) {
+    struct hash_node *current_node = htable->array[i];
+
+        while (current_node != NULL) {
+            struct hash_node *temp_node = current_node;  
+            current_node = current_node->next; 
+
+            struct edge *current_edge = temp_node->value;
+            while (current_edge != NULL) {
+                struct edge *temp_edge = current_edge;
+                current_edge = current_edge->next;
+
+                free(temp_edge->date);
+                free(temp_edge);
+            }
+            free(temp_node->key);
+            free(temp_node);
+        }
+    }
+    free(htable->array);
+    free(htable);
+}
+
+void insert_edge(Graph graph, char *args){
+    char Ni[50];
+    char Nj[50];
+    char date[11];
+    int amount;
+    sscanf(args, "%s %s %d %s", Ni, Nj, &amount, date); 
+    add_edge(graph, Ni, Nj, amount, date);
+    printf("Inserted edge from %s to %s, amount: %d, date: %s\n", Ni, Nj, amount, date);
+
 }
