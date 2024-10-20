@@ -225,7 +225,9 @@ void insert_node(Graph graph, char *args){
     char Ni[50];
     sscanf(args, "%s", Ni);
     add_node(graph, Ni);
-    printf("Inserted node: %s\n", Ni);
+    printf("Succ: %s\n", Ni);
+    // ADD ERROR INDICATION
+
 }
 
 void insert_edge(Graph graph, char *args){
@@ -236,16 +238,28 @@ void insert_edge(Graph graph, char *args){
     sscanf(args, "%s %s %d %s", Ni, Nj, &amount, date); 
     add_edge(graph, Ni, Nj, amount, date);
     printf("Inserted edge from %s to %s, amount: %d, date: %s\n", Ni, Nj, amount, date);
+    // ADD ERROR INDICATION
+
 }
 
 
 void find(Graph graph, char *args){
     char Ni[50];
     sscanf(args, "%s", Ni);
+
     struct hash_node *node = search_hash_table(graph->htable, Ni);
-    if (node != NULL){
-        printf("Found Account: %s", node->key);
-    } else{
-        printf("ERROR NO ACCOUNT FOUND");
+    if (node == NULL) {
+        printf("Non-existing node: %s", Ni);
+        return;
+    }
+
+    struct edge *current_edge = node->value;
+    if (current_edge == NULL) {
+        printf("(none)\n");
+        return;
+    }
+    while(current_edge != NULL){
+        printf("%s %s %d %s\n", node->key, current_edge->to_node->accountName, current_edge->amount, current_edge->date);
+        current_edge = current_edge->next;
     }
 }

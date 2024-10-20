@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
         } else if (strcmp(command, "exit") == 0) {
             active = false;
         } else { 
-            printf("Command '%s' not found.\n", command);
+            perror("Unrecognized command");
         }
     }
 
