@@ -221,6 +221,13 @@ void destroy_hash_table(struct hash_table *htable){
     free(htable);               // Ελευθρεωση του hash-table.
 }
 
+void insert_node(Graph graph, char *args){
+    char Ni[50];
+    sscanf(args, "%s", Ni);
+    add_node(graph, Ni);
+    printf("Inserted node: %s\n", Ni);
+}
+
 void insert_edge(Graph graph, char *args){
     char Ni[50];
     char Nj[50];
@@ -229,5 +236,16 @@ void insert_edge(Graph graph, char *args){
     sscanf(args, "%s %s %d %s", Ni, Nj, &amount, date); 
     add_edge(graph, Ni, Nj, amount, date);
     printf("Inserted edge from %s to %s, amount: %d, date: %s\n", Ni, Nj, amount, date);
+}
 
+
+void find(Graph graph, char *args){
+    char Ni[50];
+    sscanf(args, "%s", Ni);
+    struct hash_node *node = search_hash_table(graph->htable, Ni);
+    if (node != NULL){
+        printf("Found Account: %s", node->key);
+    } else{
+        printf("ERROR NO ACCOUNT FOUND");
+    }
 }

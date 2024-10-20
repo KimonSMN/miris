@@ -22,5 +22,6 @@
     "string": "c",
     "vector": "c",
     "algorithm": "c"
-  }
+  },
+  "C_Cpp.errorSquiggles": "disabled"
 }

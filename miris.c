@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
             exit(-1);
         }
     }
+        
 
     ////// Read from the input file //////
 
@@ -69,13 +70,15 @@ int main(int argc, char *argv[])
         
         command[strlen(command)-1] = '\0';
 
-        if (strncmp(command, "n ", 2) == 0) {
-            insert_edge(graph, command + 2);
-        }
-        else if (strcmp(command, "exit") == 0) {
+        if (strncmp(command, "i ", 2) == 0) { // Eισήγαγε ένα νέο Ni ή πολλαπλούς νέους κόμβους όπως π.χ. Ni, Nj, Nk.
+            insert_node(graph, command + 2);  // Not connected nodes dont show up. Also make sure user can add multiple nodes at once. 
+        } else if(strncmp(command, "n ", 2) == 0){  // Eισήγαγε μια ακμή με φορά από Ni προς Nj με ημερομηνία date και ποσό sum.
+            insert_edge(graph, command + 2);        // Οι κόμβοι Ni και Nj μπορεί να εμφανίζονται για πρώτη φορά στην δομή.
+        } else if(strncmp(command, "f ", 2) == 0) {
+            find(graph, command + 2);
+        } else if (strcmp(command, "exit") == 0) {
             active = false;
-        }
-        else { 
+        } else { 
             printf("Command '%s' not found.\n", command);
         }
     }
@@ -106,6 +109,7 @@ int main(int argc, char *argv[])
 
     fclose(pF2);    // Close the file
 
+    print_hash_table(graph->htable);
     destroy_hash_table(graph->htable);
     destroy_graph(graph);
 

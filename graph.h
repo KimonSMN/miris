@@ -77,9 +77,11 @@ unsigned long hash(struct hash_table *htable, char *str);
 
 //// Command line functions ////////////////
 
+void insert_node(Graph graph, char *args);
+
 void insert_edge(Graph graph, char *args);
 
-
+void find(Graph graph, char *args);
 #endif // GRAPH_H
 
 
