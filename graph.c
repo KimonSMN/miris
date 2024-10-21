@@ -250,10 +250,12 @@ void insert_edge(Graph graph, char *args){
     char date[11];
     int amount;
     sscanf(args, "%s %s %d %s", Ni, Nj, &amount, date); 
+    if(strcmp(Ni, "") || strcmp(Nj,"")){
+        printf("IssueWith: %s %s", Ni, Nj);
+        return;
+    }
     add_edge(graph, Ni, Nj, amount, date);
     printf("Inserted edge from %s to %s, amount: %d, date: %s\n", Ni, Nj, amount, date);
-    // ADD ERROR INDICATION
-
 }
 
 
