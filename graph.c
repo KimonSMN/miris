@@ -4,10 +4,21 @@
 #include <stdbool.h>
 #include "graph.h"
 
+extern size_t bytes;
+
+static void *my_malloc(size_t size){
+    void *pointer = malloc(size);
+    if (pointer != NULL){
+        bytes += size;
+    }
+    return pointer;
+}
+
+
 Graph create_graph(int capacity) {
     
     // Memory allocation for graph.
-    Graph graph = malloc(sizeof(struct graph));
+    Graph graph = my_malloc(sizeof(struct graph));
     if (graph == NULL) {
         return NULL;        // Something went wrong, return NULL.
     }
@@ -40,7 +51,7 @@ void destroy_graph(Graph graph) {
 }
 
 struct node *create_node(char *accountName) {
-    struct node *new_node = malloc(sizeof(struct node)); // Δεσμευση μνημης για τον κομβο node.
+    struct node *new_node = my_malloc(sizeof(struct node)); // Δεσμευση μνημης για τον κομβο node.
     if (new_node == NULL) {
         return NULL;        // Κατι πηγε στραβα επεστρεψε NULL
     }
@@ -93,7 +104,7 @@ void add_edge(Graph graph, char *from_account, char *to_account, int amount, cha
         insert_hash_table(graph->htable, to_account, to_node->edges);
     }
 
-    struct edge *new_edge = malloc(sizeof(struct edge));    // Δεσμευει χωρο για το καινουριο edge.
+    struct edge *new_edge = my_malloc(sizeof(struct edge));    // Δεσμευει χωρο για το καινουριο edge.
     if (new_edge == NULL) {
         return;     // Κατι πηγε στραβα επεστρεψε.
     }
@@ -130,9 +141,9 @@ unsigned long hash(struct hash_table *htable, char *str) {
 }
 
 struct hash_table *create_hash_table(int capacity) {
-    struct hash_table *htable = malloc(sizeof(struct hash_table));
+    struct hash_table *htable = my_malloc(sizeof(struct hash_table));
     htable->capacity = capacity;
-    htable->array = malloc(htable->capacity * sizeof(struct hash_node *));
+    htable->array = my_malloc(htable->capacity * sizeof(struct hash_node *));
     for (int i = 0; i < htable->capacity; i++) {
         htable->array[i] = NULL;
     }
@@ -156,7 +167,7 @@ bool insert_hash_table(struct hash_table *htable, char *key, struct edge *transa
         node = node->next;
     }
 
-    struct hash_node *new_node = malloc(sizeof(struct hash_node));
+    struct hash_node *new_node = my_malloc(sizeof(struct hash_node));
     if (new_node == NULL) {
         return false;
     }

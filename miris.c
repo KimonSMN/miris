@@ -5,6 +5,9 @@
 #include <stdbool.h>
 #include <string.h>
 
+
+size_t bytes;
+
 int main(int argc, char *argv[])
 {
     Graph graph = NULL;
@@ -76,42 +79,40 @@ int main(int argc, char *argv[])
             insert_edge(graph, command + 2);        // Οι κόμβοι Ni και Nj μπορεί να εμφανίζονται για πρώτη φορά στην δομή.
         } else if(strncmp(command, "f ", 2) == 0) {
             find(graph, command + 2);
-        } else if (strcmp(command, "exit") == 0) {
+        } else if (strcmp(command, "e") == 0) { // Το πρόγραμμα τερματίζει αφού: 
+            print_graph(graph);                  // Τυπώσει στο αρχείο εξόδου την κατάσταση του γράφου όπως έχει εξελιχτεί,
+            print_hash_table(graph->htable);
+
+            if (oFile == NULL){
+                printf("Output file not provided\n");
+                return -1;
+            }
+
+            pF2 = fopen(oFile, "w");
+            if (pF2 == NULL) {
+                return -1;
+            }
+
+            struct node *current_node = graph->nodes;
+            while (current_node != NULL) {
+                struct edge *current_edge = current_node->edges;
+                while (current_edge != NULL) {
+                    fprintf(pF2, "%s %s %d %s\n", current_node->accountName, current_edge->to_node->accountName, current_edge->amount, current_edge->date);
+                    current_edge = current_edge->next;
+                }
+                current_node = current_node->next;
+            }
+
+            fclose(pF2);    // Close the file
+            destroy_hash_table(graph->htable);   // ελευθερώνει όλο τον χώρο που δυναμικά έχει πάρει το miris στην διάρκεια της εκτέλεσή του,
+            destroy_graph(graph);
+            printf("Bytes: %zu\n", bytes);       // και τυπώνει τον αριθμό των εν λόγω Bytes.
             active = false;
+
         } else { 
             perror("Unrecognized command");
         }
     }
-
-    print_graph(graph);
-
-    ////// Write to the output file //////
-
-    if (oFile == NULL){
-        printf("Output file not provided\n");
-        return -1;
-    }
-
-    pF2 = fopen(oFile, "w");
-    if (pF2 == NULL) {
-        return -1;
-    }
-
-    struct node *current_node = graph->nodes;
-    while (current_node != NULL) {
-        struct edge *current_edge = current_node->edges;
-        while (current_edge != NULL) {
-            fprintf(pF2, "%s %s %d %s\n", current_node->accountName, current_edge->to_node->accountName, current_edge->amount, current_edge->date);
-            current_edge = current_edge->next;
-        }
-        current_node = current_node->next;
-    }
-
-    fclose(pF2);    // Close the file
-
-    print_hash_table(graph->htable);
-    destroy_hash_table(graph->htable);
-    destroy_graph(graph);
 
     return 0;
 }
