@@ -233,10 +233,13 @@ void destroy_hash_table(struct hash_table *htable){
 }
 
 void insert_node(Graph graph, char *args){
-    char Ni[50];
-    sscanf(args, "%s", Ni);
-    add_node(graph, Ni);
-    printf("Succ: %s\n", Ni);
+    char *token = strtok(args, " ");
+    while (token != NULL){
+        add_node(graph, token);
+        printf("Succ: %s\n", token);
+        token = strtok(NULL, " ");
+    }
+
     // ADD ERROR INDICATION
 
 }

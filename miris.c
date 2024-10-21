@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
         } else if(strncmp(command, "f ", 2) == 0) {
             find(graph, command + 2);
         } else if (strcmp(command, "e") == 0) { // Το πρόγραμμα τερματίζει αφού: 
-            print_graph(graph);                  // Τυπώσει στο αρχείο εξόδου την κατάσταση του γράφου όπως έχει εξελιχτεί,
+            print_graph(graph);                 // Τυπώσει στο αρχείο εξόδου την κατάσταση του γράφου όπως έχει εξελιχτεί,
             print_hash_table(graph->htable);
 
             if (oFile == NULL){
@@ -106,10 +106,24 @@ int main(int argc, char *argv[])
             fclose(pF2);    // Close the file
             destroy_hash_table(graph->htable);   // ελευθερώνει όλο τον χώρο που δυναμικά έχει πάρει το miris στην διάρκεια της εκτέλεσή του,
             destroy_graph(graph);
-            printf("Bytes: %zu\n", bytes);       // και τυπώνει τον αριθμό των εν λόγω Bytes.
+            printf("%zu Bytes released\n", bytes);       // και τυπώνει τον αριθμό των εν λόγω Bytes.
             active = false;
 
-        } else { 
+        } else if(strncmp(command, "d ", 2) == 0){ // delete
+            
+        } 
+        // else if(){
+
+        // } else if(){
+
+        // } else if(){
+
+        // } else if(){
+
+        // } else if(){
+
+        // }
+         else { 
             perror("Unrecognized command");
         }
     }
