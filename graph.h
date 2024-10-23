@@ -54,6 +54,8 @@ struct node *find_node(Graph graph, char *accountName);
 // Προσθετει στον γραφο, τον κομβο με ονομα accountName.
 void add_node(Graph graph, char *accountName);
 
+void delete_node(Graph graph, char* accountName);
+
 // function to add an edge to the graph
 void add_edge(Graph graph, char *from_account, char *to_account, int amount, char *date);
 
@@ -69,6 +71,8 @@ bool insert_hash_table(struct hash_table *htable, char *key, struct edge *transa
 
 struct hash_node *search_hash_table(struct hash_table *htable, char *key);
 
+void remove_from_hash_table(struct hash_table *htable, char *accountName);
+
 void print_hash_table(struct hash_table *htable);
 
 void destroy_hash_table(struct hash_table *htable);
@@ -82,6 +86,8 @@ void insert_node(Graph graph, char *args);
 void insert_edge(Graph graph, char *args);
 
 void find(Graph graph, char *args);
+
+void delete(Graph graph, char *args); // works but then i get seg fault when i exit
 #endif // GRAPH_H
 
 

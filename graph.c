@@ -83,6 +83,103 @@ void add_node(Graph graph, char *accountName) {
     insert_hash_table(graph->htable, accountName, new_node->edges); // Προσθετει στο hashtable τον καινουριο κομβο.
 }
 
+void delete_node(Graph graph, char* accountName){
+
+    struct node *node_to_delete = find_node(graph, accountName);
+    if (node_to_delete == NULL){
+        return;
+    }
+
+    // εξερχόμενες ακμες
+    struct edge *current_edge = node_to_delete->edges;
+    while(current_edge != NULL){
+        struct edge *temp = current_edge;
+        current_edge = current_edge->next;
+        free(temp->date);
+        free(temp);
+    }
+    
+    // εισερχόμενες ακμές
+    struct node *current_node = graph->nodes;
+    while(current_node != NULL){
+        struct edge *prev_edge = NULL;
+        struct edge *current_edge = current_node->edges;
+        
+        while(current_edge != NULL){
+            if(current_edge->to_node == node_to_delete){
+                if (prev_edge == NULL) {
+                    current_node->edges = current_edge->next; // πρωτο edge στην λιστα
+
+                } else{
+                    prev_edge->next = current_edge->next;
+                }
+
+                free(current_edge->date);
+                struct edge *temp = current_edge;
+                current_edge = current_edge->next;
+                free(temp);
+            } else{
+                prev_edge = current_edge;
+                current_edge = current_edge->next;
+            }
+        }
+        current_node = current_node->next;
+    }
+
+    struct node *prev_node = NULL;
+    current_node = graph->nodes;
+    while (current_node != NULL) {
+        if (current_node == node_to_delete) {
+            if (prev_node == NULL) {
+                graph->nodes = current_node->next;
+            } else {
+                prev_node->next = current_node->next;
+            }
+            break;
+        }
+        prev_node = current_node;
+        current_node = current_node->next;
+    }
+
+    remove_from_hash_table(graph->htable, accountName);
+
+    free(node_to_delete->accountName);
+    free(node_to_delete);
+}
+
+void remove_from_hash_table(struct hash_table *htable, char *accountName){
+    if (accountName == NULL){
+        return;
+    }
+
+    unsigned long index = hash(htable, accountName);
+
+    struct hash_node *current_node = htable->array[index];
+    struct hash_node *prev_node = NULL;
+
+    while (current_node != NULL) {
+        if (strcmp(current_node->key, accountName) == 0) {
+            if (prev_node == NULL) {
+
+                htable->array[index] = current_node->next;
+            } else {
+
+                prev_node->next = current_node->next;
+            }
+
+            free(current_node->key);
+            free(current_node);
+
+            return;
+        }
+
+        prev_node = current_node;
+        current_node = current_node->next;
+    }
+
+}
+
+
 void add_edge(Graph graph, char *from_account, char *to_account, int amount, char *date) {
     struct node *from_node = find_node(graph, from_account);    // Ψαχνει να βρει τον εισερχομενο κομβο.
     // Δεν βρηκε τον from_node στον γραφο.
@@ -249,8 +346,9 @@ void insert_edge(Graph graph, char *args){
     char Nj[50];
     char date[11];
     int amount;
+    
     sscanf(args, "%s %s %d %s", Ni, Nj, &amount, date); 
-    if(strcmp(Ni, "") || strcmp(Nj,"")){
+    if(strcmp(Ni, "") == 0|| strcmp(Nj,"") == 0){
         printf("IssueWith: %s %s", Ni, Nj);
         return;
     }
@@ -278,4 +376,44 @@ void find(Graph graph, char *args){
         printf("%s %s %d %s\n", node->key, current_edge->to_node->accountName, current_edge->amount, current_edge->date);
         current_edge = current_edge->next;
     }
+}
+
+void delete(Graph graph, char *args){
+    char *token = strtok(args, " ");
+    while (token != NULL){
+        if(search_hash_table(graph->htable, token) == NULL){
+            printf("Non-existing node: %s", token);
+            return;
+        }
+        delete_node(graph, token);
+        token = strtok(NULL, " ");
+    }
+    // seg fault after use at exit
+}
+
+void delete2(Graph graph, char *args){
+    
+}
+void modify(Graph graph, char *args){
+    
+}
+
+void receiving(Graph graph, char *args){
+    
+}
+
+void circle_find(Graph graph, char *args){
+    
+}
+
+void find_circles(Graph graph, char *args){
+    
+}
+
+void trace_flow(Graph graph, char *args){
+    
+}
+
+void connected(Graph graph, char *args){
+    // bfs nmz
 }
