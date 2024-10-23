@@ -88,6 +88,9 @@ void insert_edge(Graph graph, char *args);
 void find(Graph graph, char *args);
 
 void delete(Graph graph, char *args); // works but then i get seg fault when i exit
+
+void modify(Graph graph, char *args);
+
 #endif // GRAPH_H
 
 

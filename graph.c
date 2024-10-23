@@ -394,9 +394,34 @@ void delete(Graph graph, char *args){
 void delete2(Graph graph, char *args){
     
 }
-void modify(Graph graph, char *args){
-    
+
+void modify(Graph graph, char *args) {
+    char Ni[50], Nj[50], date[11], date1[11];
+    int sum, sum1;
+
+    sscanf(args, "%s %s %d %d %s %s", Ni, Nj, &sum, &sum1, date, date1); 
+
+    struct node *current_node = find_node(graph, Ni);
+    if (current_node == NULL) {
+        printf("Non-existing node: %s\n", Ni);
+        return;
+    }
+
+    struct edge *current_edge = current_node->edges;
+    while (current_edge != NULL) {
+        if (strcmp(current_edge->to_node->accountName, Nj) == 0 && current_edge->amount == sum && strcmp(current_edge->date, date) == 0) {
+
+            current_edge->amount = sum1;
+            free(current_edge->date);
+            current_edge->date = strdup(date1);
+            return;  // if succesful return
+        }
+        current_edge = current_edge->next;
+    }
+
+    printf("Non-existing edge: %s %s %d %s\n", Ni, Nj, sum, date); // error indication
 }
+
 
 void receiving(Graph graph, char *args){
     

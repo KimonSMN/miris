@@ -111,10 +111,10 @@ int main(int argc, char *argv[])
 
         } else if(strncmp(command, "d ", 2) == 0){ // delete
             delete(graph, command + 2);
+        } else if(strncmp(command, "m ", 2) == 0){
+            modify(graph, command + 2);
         } 
         // else if(){
-
-        // } else if(){
 
         // } else if(){
 
