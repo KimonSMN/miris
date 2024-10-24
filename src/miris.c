@@ -28,7 +28,11 @@ int main(int argc, char *argv[])
             exit(-1);
         }
     }
-        
+
+    if (oFile == NULL) {
+        printf("Output file not provided\n");
+        return -1;
+    }
 
     ////// Read from the input file //////
 
@@ -83,11 +87,6 @@ int main(int argc, char *argv[])
             print_graph(graph);                 // Τυπώσει στο αρχείο εξόδου την κατάσταση του γράφου όπως έχει εξελιχτεί,
             print_hash_table(graph->htable);
 
-            if (oFile == NULL){
-                printf("Output file not provided\n");
-                return -1;
-            }
-
             pF2 = fopen(oFile, "w");
             if (pF2 == NULL) {
                 return -1;
@@ -113,17 +112,7 @@ int main(int argc, char *argv[])
             delete(graph, command + 2);
         } else if(strncmp(command, "m ", 2) == 0){
             modify(graph, command + 2);
-        } 
-        // else if(){
-
-        // } else if(){
-
-        // } else if(){
-
-        // } else if(){
-
-        // }
-         else { 
+        } else { 
             perror("Unrecognized command");
         }
     }

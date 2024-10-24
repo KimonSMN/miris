@@ -5,10 +5,10 @@ CC = gcc
 CFLAGS = -Wall -g 
 
 # Dependencies (header files)
-DEPS = graph.h
+DEPS = src/graph.h
 
 # Object files
-OBJ = graph.o miris.o
+OBJ = src/graph.o src/hash_table.o src/miris.o
 
 # Default target: Build the executable
 all: miris
@@ -23,6 +23,6 @@ miris: $(OBJ)
 
 # Clean up object files and executable
 clean:
-	rm -f *.o miris
+	rm -f src/*.o miris
 
 .PHONY: clean
