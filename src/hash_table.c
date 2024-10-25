@@ -68,6 +68,8 @@ struct hash_node *search_hash_table(struct hash_table *htable, char *key){
 }
 
 void print_hash_table(struct hash_table *htable) {
+    printf("\n\t//////// Hashtable ////////\t\n\n");
+
     for (int i = 0; i < htable->capacity; i++) {    // Απο την αρχη του ht εως το μεγεθος του. 
         struct hash_node *node = htable->array[i];  
         if (node == NULL) {         // Εαν το node ειναι κενο (NULL), επεστρεψε.
@@ -84,7 +86,6 @@ void print_hash_table(struct hash_table *htable) {
         }
     }
 }
-
 
 void destroy_hash_table(struct hash_table *htable){
     if(htable == NULL){ // Αμα το hash-table ειναι NULL (κενο)

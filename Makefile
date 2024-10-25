@@ -1,13 +1,13 @@
 # Compiler
 CC = gcc
 
-# Compiler flags
+# Compiler options
 CFLAGS = -Wall -g 
 
-# Dependencies (header files)
+# Dependencies
 DEPS = src/graph.h
 
-# Object files
+# Αρχεία .o
 OBJ = src/graph.o src/hash_table.o src/miris.o
 
 # Default target: Build the executable
@@ -21,7 +21,6 @@ miris: $(OBJ)
 %.o: %.c $(DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Clean up object files and executable
 clean:
 	rm -f src/*.o miris
 

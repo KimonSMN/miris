@@ -58,12 +58,11 @@ int main(int argc, char *argv[])
 
     graph = create_graph(line);
 
-    // Read transactions from the file and add edges
-    while (fscanf(pF1, "%49s %49s %d %10s", accountNameFrom, accountNameTo, &amount, date) == 4) {
+    while (fscanf(pF1, "%s %s %d %s", accountNameFrom, accountNameTo, &amount, date) == 4) {
         add_edge(graph, accountNameFrom, accountNameTo, amount, date);
     }
 
-    fclose(pF1);    // Close the file
+    fclose(pF1);
     
     ////// COMMAND LINE //////
 
@@ -79,19 +78,30 @@ int main(int argc, char *argv[])
 
         if (strncmp(command, "i ", 2) == 0) { // Eισήγαγε ένα νέο Ni ή πολλαπλούς νέους κόμβους όπως π.χ. Ni, Nj, Nk.
             insert_node(graph, command + 2);  // Not connected nodes dont show up. Also make sure user can add multiple nodes at once. 
-        } else if(strncmp(command, "n ", 2) == 0){  // Eισήγαγε μια ακμή με φορά από Ni προς Nj με ημερομηνία date και ποσό sum.
+        } 
+        else if(strncmp(command, "n ", 2) == 0){  // Eισήγαγε μια ακμή με φορά από Ni προς Nj με ημερομηνία date και ποσό sum.
             insert_edge(graph, command + 2);        // Οι κόμβοι Ni και Nj μπορεί να εμφανίζονται για πρώτη φορά στην δομή.
-        } else if(strncmp(command, "f ", 2) == 0) {
+        } 
+        else if(strncmp(command, "f ", 2) == 0) {
             find(graph, command + 2);
-        } else if (strcmp(command, "e") == 0) { // Το πρόγραμμα τερματίζει αφού: 
-            print_graph(graph);                 // Τυπώσει στο αρχείο εξόδου την κατάσταση του γράφου όπως έχει εξελιχτεί,
-            print_hash_table(graph->htable);
+        } 
+        else if(strncmp(command, "d ", 2) == 0){  // Διάγραψε από το γράφο ένα Ni ή πολλαπλούς κόμβους όπως π.χ. Ni, Nj, Nk, 
+            delete(graph, command + 2);             // Επίσης όλες τις εισερχόμενες/εξερχόμενες ακμές (και πληροφορίες για ημερομηνίες και ποσά) διαγράφονται.
+        } 
+        else if(strncmp(command, "m ", 2) == 0){    // Aλλαξε το ποσό sum και την ημερομηνία date σε νέες τιμές sum1 και date1. 
+            modify(graph, command + 2);             // Αν υπάρχουν πολλαπλές ακμές με τις ίδιες τιμές sum μετάτρεψε την πρώτη που θα βρεις.
+
+        } 
+        else if (strcmp(command, "e") == 0) { // Το πρόγραμμα τερματίζει αφού: 
+            //print_graph(graph);
+            //print_hash_table(graph->htable);
 
             pF2 = fopen(oFile, "w");
             if (pF2 == NULL) {
                 return -1;
             }
 
+            // Τυπώσει στο αρχείο εξόδου την κατάσταση του γράφου όπως έχει εξελιχτεί,
             struct node *current_node = graph->nodes;
             while (current_node != NULL) {
                 struct edge *current_edge = current_node->edges;
@@ -108,10 +118,6 @@ int main(int argc, char *argv[])
             printf("%zu Bytes released\n", bytes);       // και τυπώνει τον αριθμό των εν λόγω Bytes.
             active = false;
 
-        } else if(strncmp(command, "d ", 2) == 0){ // delete
-            delete(graph, command + 2);
-        } else if(strncmp(command, "m ", 2) == 0){
-            modify(graph, command + 2);
         } else { 
             perror("Unrecognized command");
         }
